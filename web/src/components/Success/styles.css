@@ -1,0 +1,35 @@
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(7, 7, 10, 0.95);
+  z-index: 2000;
+}
+
+#modal .success {
+  text-decoration: none;
+  outline: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.success h1 {
+  color: #fff;
+  margin-top: 16px;
+}
+
+.success svg {
+  color: var(--primary-color);
+  font-size: 40px;
+}

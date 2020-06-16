@@ -1,10 +1,11 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet'
 
 import Dropzone from '../../components/Dropzone'
+import Success from '../../components/Success'
 
 import api from '../../services/api'
 import ibge from '../../services/ibge'
@@ -48,7 +49,7 @@ const CreatePoint = () => {
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
   const [selectedFile, setSelectedFile] = useState<File>()
 
-  const history = useHistory()
+  const [submitData, setSubmitData] = useState<boolean>(false)
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -145,13 +146,14 @@ const CreatePoint = () => {
 
     await api.post('/points', data)
 
-    alert('Ponto de coleta criado com successo!')
-
-    history.push('/')
+    setSubmitData(true)
   }
 
   return (
     <div id="page-create-point">
+      
+      { submitData && <Success /> }
+
       <header>
         <img src={logo} alt="Ecoleta"/>
 
