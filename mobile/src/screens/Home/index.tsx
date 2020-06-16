@@ -1,19 +1,46 @@
-import React, { useState } from 'react'
-import { View, Text, Image, TextInput, ImageBackground, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, Image, ImageBackground, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import RNPickerSelect from 'react-native-picker-select'
+
+import ibge from '../../services/ibge'
+
+interface Uf {
+  nome: string,
+  sigla: string
+}
+
+interface City {
+  nome: string
+}
 
 const Home = () => {
-  const [uf, setUf] = useState<string>('')
-  const [city, setCity] = useState<string>('')
+  const [ufs, setUfs] = useState<Uf[]>([])
+  const [cities, setCities] = useState<City[]>([])
+
+  const [selectedUf, setSelectedUf] = useState('')
+  const [selectedCity, setSelectedCity] = useState('')
 
   const navigation = useNavigation()
 
+  useEffect(() => {
+    ibge.get('/').then(response => {
+      setUfs(response.data)
+    })
+  }, [])
+
+  useEffect(() => {
+    ibge.get(`/${selectedUf}/distritos?orderBy=nome`).then(response => {
+      setCities(response.data)
+    })
+  }, [selectedUf])
+
   function handleNavigateToPoints() {
     navigation.navigate('Points', {
-      uf,
-      city
+      uf: selectedUf,
+      city: selectedCity
     })
   }
 
@@ -37,20 +64,34 @@ const Home = () => {
 
         <View style={styles.footer}>
 
-          <TextInput 
-            style={styles.input}
-            placeholder="Digite o estado"
-            value={uf}
-            maxLength={2}
-            autoCapitalize="characters"
-            autoCorrect={false}
-            onChangeText={setUf}
+          <RNPickerSelect 
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
+            placeholder={{ label: 'Uf' }}
+            value={selectedUf}
+            onValueChange={value => setSelectedUf(value)}
+            Icon={() => <Icon name="chevron-down" size={24} color="gray" />}
+            items={ufs.map(uf => (
+              {
+                label: uf.nome,
+                value: uf.sigla 
+              })
+            )}
           />
-          <TextInput 
-            style={styles.input} 
-            placeholder="Digite a cidade"
-            value={city}
-            onChangeText={setCity}
+
+          <RNPickerSelect
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
+            placeholder={{ label: 'Cidade' }}
+            value={selectedCity}
+            onValueChange={value => setSelectedCity(value)}
+            Icon={() => <Icon name="chevron-down" size={24} color="gray" />}
+            items={cities.map(city => (
+              { 
+                label: city.nome, 
+                value: city.nome 
+              }) 
+            )}
           />
 
           <RectButton style={styles.button} onPress={handleNavigateToPoints}>
@@ -66,6 +107,39 @@ const Home = () => {
     </KeyboardAvoidingView>
   )
 }
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    backgroundColor: '#fff',
+    borderColor: '#fff',
+    borderRadius: 10,
+    color: 'black',
+
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    paddingRight: 30,
+    marginBottom: 8,
+  },
+
+  inputAndroid: {
+    fontSize: 16,
+    backgroundColor: '#fff',
+    borderColor: '#fff',
+    borderRadius: 10,
+    color: 'black',
+    
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    paddingRight: 30,
+    marginBottom: 8,
+  },
+
+  iconContainer: {
+    top: 18,
+    right: 12,
+  },
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -97,17 +171,6 @@ const styles = StyleSheet.create({
 
   footer: {},
 
-  select: {},
-
-  input: {
-    height: 60,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    marginBottom: 8,
-    paddingHorizontal: 24,
-    fontSize: 16,
-  },
-
   button: {
     backgroundColor: '#34CB79',
     height: 60,
@@ -122,6 +185,8 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -134,6 +199,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_500Medium',
     fontSize: 16,
   }
-});
+})
 
 export default Home
