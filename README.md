@@ -1,6 +1,7 @@
 <h1 align="center">
-  <img src="https://user-images.githubusercontent.com/36782514/84957754-3e1e1100-b0d2-11ea-910a-eab8a6815a61.png" alt="Logo ecoleta" width="200">
+  <img src="https://user-images.githubusercontent.com/36782514/84957754-3e1e1100-b0d2-11ea-910a-eab8a6815a61.png" alt="Logo ecoleta" width="220">
 </h1>
+<br>
 
 <p align="center"><b>Your waste collection marketplace, build in a Next-Level-Week 🚀</b></p>
 
@@ -10,7 +11,7 @@
   <img alt="Repository size" src="https://img.shields.io/github/repo-size/calebesg/ecoleta">
 
   <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License MIT">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License MIT">
   </a>
 </p>
 
@@ -51,7 +52,7 @@ This app features all the latest tools and practices in mobile development!
 2. Run ``yarn`` or ``npm install`` to install all dependencies
 3. Run ``npm run knex:migrate`` to create the database
 4. Run ``npm run knex:seed`` to save the initial database data
-5. RUn ``npm run dev`` inicialize server
+5. Run ``npm run dev`` inicialize server
 
 ### 💻 Getting started web
 
